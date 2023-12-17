@@ -9,5 +9,5 @@ data class SearchState(
     val isViewBlockerVisible: Boolean = false,
     val lastInputText: String = "",
     val showNoResult: Boolean = false,
-    val noResultKeyword: String = "",
+    val searchKeyword: String = "",
 )
