@@ -36,7 +36,9 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
     }
 
     override fun initUi() {
-
+        binding.toolbar.setNavigationOnClickListener {
+            viewModel.navToBack()
+        }
     }
 
     override fun initBinding() {
@@ -72,8 +74,16 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                     .collect { event ->
                         when (event) {
-                            BookDetailEvent.NavToBack -> TODO()
-                            is BookDetailEvent.ShowToast -> TODO()
+                            BookDetailEvent.NavToBack -> {
+                                findNavController().popBackStack()
+                            }
+                            is BookDetailEvent.ShowToast -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    event.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
             }

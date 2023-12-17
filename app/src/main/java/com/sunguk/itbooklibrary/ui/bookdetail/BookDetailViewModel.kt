@@ -45,4 +45,12 @@ class BookDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun navToBack() {
+        launch {
+            sendEvent(
+                BookDetailEvent.NavToBack
+            )
+        }
+    }
 }
