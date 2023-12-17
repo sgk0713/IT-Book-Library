@@ -12,7 +12,8 @@ sealed class SearchResultBook(
         val book: SearchedBook,
     ) : SearchResultBook(orderIndex)
 
-    data class LoadMore(
+    class LoadMore(
         override val orderIndex: Int = Int.MAX_VALUE,
+        var lastRequestedPage: Int = 1,
     ) : SearchResultBook(orderIndex)
 }

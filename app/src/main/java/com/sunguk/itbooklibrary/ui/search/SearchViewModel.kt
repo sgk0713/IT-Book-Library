@@ -47,26 +47,34 @@ class SearchViewModel @Inject constructor(
     private fun loadInitPage(query: String) {
         launch {
             state.copy(
-                isSearchingBook = true,
-                showNoResult = false,
                 searchKeyword = query,
-                isInitialized = true,
             ).let {
                 updateState(it)
             }
             loadSuccessPageSet.clear()
             loadSuccessPageSet.add(1)
-            when (val result = onNewPageRequest(1)) {
-                is Pageable.Result.Success -> {
-                    resultCallback.invoke(result)
-                }
+            loadPage(1)
+        }
+    }
 
-                is Pageable.Result.Failure -> {
-                    result.throwable.printStackTrace()
-                    loadSuccessPageSet.remove(result.requestedPage)
-                    resultCallback.invoke(result)
+    private suspend fun loadPage(page: Int) {
+        state.copy(
+            isSearchingBook = true,
+            showNoResult = false,
+            isInitialized = true,
+        ).let {
+            updateState(it)
+        }
+        when (val result = onNewPageRequest(page)) {
+            is Pageable.Result.Success -> {
+                resultCallback.invoke(result)
+            }
 
-                }
+            is Pageable.Result.Failure -> {
+                result.throwable.printStackTrace()
+                loadSuccessPageSet.remove(result.requestedPage)
+                resultCallback.invoke(result)
+
             }
         }
     }
@@ -122,12 +130,12 @@ class SearchViewModel @Inject constructor(
     override fun onLoadMoreClicked() {
         launch {
             state.copy(
-                searchedBook = state.searchedBook - loadMoreItem
+                searchedBook = state.searchedBook - loadMoreItem,
             ).let {
                 updateState(it)
             }
+            loadPage(loadMoreItem.lastRequestedPage)
         }
-        // TODO: call search again
     }
 
     override fun onOpenLinkClicked(url: String) {
@@ -167,13 +175,10 @@ class SearchViewModel @Inject constructor(
                     }
                 }
                 is Pageable.Result.Failure -> {
-                    sendEvent(
-                        SearchEvent.ShowToast(
-                            message = it.throwable.message ?: ""
-                        )
-                    )
                     state.copy(
-                        searchedBook = state.searchedBook + loadMoreItem,
+                        searchedBook = state.searchedBook + loadMoreItem.apply {
+                            lastRequestedPage = it.requestedPage
+                        },
                         isSearchingBook = false,
                     ).let {
                         updateState(it)
