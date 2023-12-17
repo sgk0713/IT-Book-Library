@@ -9,5 +9,28 @@
         android:id="@+id/searchFragment"
         android:name="com.sunguk.itbooklibrary.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+
+        <action
+            android:id="@+id/action_searchFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment">
+            <argument
+                android:name="isbn13"
+                android:defaultValue=""
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="com.sunguk.itbooklibrary.ui.bookdetail.BookDetailFragment"
+        android:label="BookDetailFragment"
+        tools:layout="@layout/fragment_bookdetail">
+        <argument
+            android:name="isbn13"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 </navigation>

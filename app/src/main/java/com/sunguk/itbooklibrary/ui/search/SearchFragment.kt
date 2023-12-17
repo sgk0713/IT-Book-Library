@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sunguk.itbooklibrary.R
 import com.sunguk.itbooklibrary.databinding.FragmentSearchBinding
@@ -102,12 +103,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                                 startActivity(intent)
                             }
                             is SearchEvent.NavToDetail -> {
-                                // TODO: navigate to detail
-                                Toast.makeText(
-                                    requireContext(),
-                                    "navToDetail : ${event.isbn13}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                val action =
+                                    SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(
+                                        event.isbn13
+                                    )
+                                findNavController().navigate(action)
                             }
                             is SearchEvent.ShowToast -> {
                                 Toast.makeText(
