@@ -83,6 +83,7 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                                 .placeholder(R.drawable.ic_launcher_foreground)
                                 .into(binding.imageView)
                         }
+                        binding.loadingView.isVisible = state.isLoadingContent
                     }
             }
             launch {
