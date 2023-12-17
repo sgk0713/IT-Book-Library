@@ -3,5 +3,14 @@
     <string name="search_hint">Please enter a search keyword</string>
     <string name="no_result_keyword">There are no search results for \'%1$s\'</string>
     <string name="isbn_13_info">ISBN-13 : %1$s</string>
+    <string name="isbn_10_info">ISBN-10 : %1$s</string>
     <string name="load_more">Load more</string>
+    <string name="rating">Rating</string>
+    <string name="pages">Pages</string>
+    <string name="year">Year</string>
+    <string name="publisher">Publisher</string>
+    <string name="author">Author</string>
+    <string name="language">Language</string>
+    <string name="description">Description</string>
+    <string name="pdfs">PDFs</string>
 </resources>
