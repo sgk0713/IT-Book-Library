@@ -70,14 +70,15 @@ class SearchBook @Inject constructor(
         }
     }.fold(
         onSuccess = {
-            Response.Success(
+            Response(
                 searchedKeyword = parameter.keyword,
                 list = it,
                 requestedPage = parameter.page
             )
         },
         onFailure = {
-            Response.Failure(it)
+            it.printStackTrace()
+            throw it
         }
     )
 
@@ -87,15 +88,9 @@ class SearchBook @Inject constructor(
         val keyword: String,
     )
 
-    sealed class Response {
-        class Failure(
-            val throwable: Throwable,
-        ) : Response()
-
-        class Success(
-            val searchedKeyword: String,
-            val list: List<Book>,
-            val requestedPage: Int,
-        ) : Response()
-    }
+    class Response(
+        val searchedKeyword: String,
+        val list: List<Book>,
+        val requestedPage: Int,
+    )
 }
