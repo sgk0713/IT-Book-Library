@@ -1,6 +1,8 @@
 package com.sunguk.itbooklibrary.ui.search
 
+import com.sunguk.domain.usecase.CheckNetworkAvailability
 import com.sunguk.domain.usecase.SearchBook
+import com.sunguk.itbooklibrary.R
 import com.sunguk.itbooklibrary.ui.base.BaseViewModel
 import com.sunguk.itbooklibrary.ui.search.adapter.SearchResultController
 import com.sunguk.itbooklibrary.ui.search.intent.SearchEvent
@@ -15,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchBook: SearchBook,
+    private val checkNetworkAvailability: CheckNetworkAvailability,
 ) : BaseViewModel<SearchState, SearchEvent>(SearchState()),
     SearchResultController,
     Pageable<SearchBook.Response> {
@@ -105,11 +108,11 @@ class SearchViewModel @Inject constructor(
                     updateState(it)
                 }
             }
-            loadInitPage(query)
             displayViewBlocker(false)
+            loadInitPage(query)
         } else {
             launch {
-                sendEvent(SearchEvent.ShowToast("Please Enter a search keyword"))
+                sendEvent(SearchEvent.ShowToast(R.string.keyword_blank_error))
             }
         }
     }
@@ -175,6 +178,9 @@ class SearchViewModel @Inject constructor(
                     }
                 }
                 is Pageable.Result.Failure -> {
+                    if (checkNetworkAvailability.invoke(Unit).not()) {
+                        sendEvent(SearchEvent.ShowToast(R.string.network_error))
+                    }
                     state.copy(
                         searchedBook = state.searchedBook + loadMoreItem.apply {
                             lastRequestedPage = it.requestedPage

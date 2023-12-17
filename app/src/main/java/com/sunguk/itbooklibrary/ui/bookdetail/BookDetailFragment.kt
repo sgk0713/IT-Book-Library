@@ -107,7 +107,7 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                             is BookDetailEvent.ShowToast -> {
                                 Toast.makeText(
                                     requireContext(),
-                                    event.message,
+                                    event.messageRes,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

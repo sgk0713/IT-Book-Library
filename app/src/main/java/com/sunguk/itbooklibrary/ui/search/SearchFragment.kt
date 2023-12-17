@@ -114,7 +114,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                             is SearchEvent.ShowToast -> {
                                 Toast.makeText(
                                     requireContext(),
-                                    event.message,
+                                    event.messageRes,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

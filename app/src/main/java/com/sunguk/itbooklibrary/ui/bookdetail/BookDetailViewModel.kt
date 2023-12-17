@@ -1,6 +1,8 @@
 package com.sunguk.itbooklibrary.ui.bookdetail
 
+import com.sunguk.domain.usecase.CheckNetworkAvailability
 import com.sunguk.domain.usecase.GetBookDetail
+import com.sunguk.itbooklibrary.R
 import com.sunguk.itbooklibrary.ui.base.BaseViewModel
 import com.sunguk.itbooklibrary.ui.bookdetail.adapter.BookDetailController
 import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailEvent
@@ -12,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
     private val getBookDetail: GetBookDetail,
+    private val checkNetworkAvailability: CheckNetworkAvailability,
 ) : BaseViewModel<BookDetailState, BookDetailEvent>(BookDetailState()), BookDetailController {
 
     fun start(isbn13: String) {
@@ -43,9 +46,13 @@ class BookDetailViewModel @Inject constructor(
                 updateState(it)
             }
         }.onFailure {
-            sendEvent(
-                BookDetailEvent.ShowToast("Error Occurred")
-            )
+            if (checkNetworkAvailability.invoke(Unit).not()) {
+                sendEvent(BookDetailEvent.ShowToast(R.string.network_error))
+            } else {
+                sendEvent(
+                    BookDetailEvent.ShowToast(R.string.unknown_error)
+                )
+            }
             state.copy(
                 showRefreshButton = true,
                 isLoadingContent = false,
