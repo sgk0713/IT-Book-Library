@@ -50,6 +50,7 @@ class SearchViewModel @Inject constructor(
                 isSearchingBook = true,
                 showNoResult = false,
                 searchKeyword = query,
+                isInitialized = true,
             ).let {
                 updateState(it)
             }

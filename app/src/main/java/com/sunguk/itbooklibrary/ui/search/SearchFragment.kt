@@ -91,6 +91,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                         binding.emptyResultView.isVisible = state.showNoResult
                         binding.emptyResultText.text =
                             getString(R.string.no_result_keyword, state.searchKeyword)
+                        binding.guide.isVisible = state.isInitialized.not()
+                        binding.resultRecyclerView.isVisible = state.isInitialized
                     }
             }
             launch {

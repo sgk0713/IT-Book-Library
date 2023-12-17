@@ -10,4 +10,5 @@ data class SearchState(
     val lastInputText: String = "",
     val showNoResult: Boolean = false,
     val searchKeyword: String = "",
+    val isInitialized: Boolean = false,
 )

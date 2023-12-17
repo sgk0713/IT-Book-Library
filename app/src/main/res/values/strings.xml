@@ -14,4 +14,5 @@
     <string name="description">Description</string>
     <string name="pdfs">PDFs</string>
     <string name="reload">Reload</string>
+    <string name="operator_guide">Try using \'or(|)\' and \'not(-)\' operators!\n\n android|java\n\'android\' or \'java\' in the title\n\n android-java\n\'android\' but excluded \'java\' in the title</string>
 </resources>
