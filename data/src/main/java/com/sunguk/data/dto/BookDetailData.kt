@@ -22,7 +22,7 @@ data class BookDetailData(
     @Json(name = "price") val price: String,                  // "$39.65"
     @Json(name = "image") val image: String,                  // "https://itbook.store/img/books/9781617294136.png"
     @Json(name = "url") val url: String,                    // "https://itbook.store/books/9781617294136"
-    @Json(name = "pdf") val pdf: Map<String, String>,        // {"Chapter 2": "https://itbook.store/files/9781617294136/chapter2.pdf", "Chapter 5": "https://itbook.store/files/9781617294136/chapter5.pdf"}
+    @Json(name = "pdf") val pdf: Map<String, String>?,        // {"Chapter 2": "https://itbook.store/files/9781617294136/chapter2.pdf", "Chapter 5": "https://itbook.store/files/9781617294136/chapter5.pdf"}
 )
 
 fun BookDetailData.toEntity() = BookDetail(
@@ -40,10 +40,10 @@ fun BookDetailData.toEntity() = BookDetail(
     price = price,
     imageUrl = image,
     detailPageUrl = url,
-    pdfs = pdf.map {
+    pdfs = pdf?.map {
         PdfInfo(
             it.key,
             it.value
         )
-    }
+    } ?: emptyList()
 )

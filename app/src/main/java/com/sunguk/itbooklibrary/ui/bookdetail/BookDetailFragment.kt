@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.sunguk.itbooklibrary.R
 import com.sunguk.itbooklibrary.databinding.FragmentBookdetailBinding
 import com.sunguk.itbooklibrary.ui.base.BaseFragment
 import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailEvent
@@ -40,7 +45,26 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                 viewModel.stateFlow
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                     .collect { state ->
-
+                        state.book?.run {
+                            binding.title.text = title
+                            binding.subtitle.text = subtitle
+                            binding.authors.text = authors
+                            binding.publisher.text = publisher
+                            binding.language.text = language
+                            binding.isbn13.text = getString(R.string.isbn_13_info, isbn13)
+                            binding.isbn10.text = getString(R.string.isbn_10_info, isbn10)
+                            binding.pagesValue.text = pages
+                            binding.yearValue.text = year
+                            binding.ratingValue.text = rating
+                            binding.desc.text = desc
+                            binding.price.text = price
+                            Glide.with(binding.imageView)
+                                .load(imageUrl)
+                                .error(R.drawable.ic_launcher_foreground)
+                                .placeholder(R.drawable.ic_launcher_foreground)
+                                .into(binding.imageView)
+                            binding.pdfGroup.isVisible = pdfs.isEmpty()
+                        }
                     }
             }
             launch {
