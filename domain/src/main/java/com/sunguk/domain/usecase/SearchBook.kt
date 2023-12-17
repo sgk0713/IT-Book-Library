@@ -38,7 +38,7 @@ class SearchBook @Inject constructor(
             val pageNumber = parameter.page
             val originalInput = parameter.keyword
 
-            originalInput.split("|", limit = maxSearchWords)
+            val uniqueQueries = originalInput.split("|", limit = maxSearchWords)
                 .map {
                     val splits = it.split("-", limit = 2).map(String::trim)
 
@@ -46,7 +46,9 @@ class SearchBook @Inject constructor(
                     val excludedKeyword = splits.getOrElse(1) { "" }
 
                     searchKeyword to excludedKeyword
-                }
+                }.toSet()
+
+            uniqueQueries
                 .filter { (searchKeyword, _) -> searchKeyword.isNotBlank() }
                 .map { (searchKeyword, excludedKeywords) ->
                     async {
@@ -62,6 +64,9 @@ class SearchBook @Inject constructor(
                     }
                 }.map { it.await() }
                 .flatten()
+                .distinctBy {
+                    it.isbn13
+                }
         }
     }.fold(
         onSuccess = {
