@@ -71,6 +71,53 @@ class SearchViewModel @Inject constructor(
     }
 
 
+    fun updateKeyword(text: String) {
+        launch {
+            if (text.isBlank() && state.lastInputText != text) {
+                sendEvent(SearchEvent.FillTextWith(text))
+            }
+            state.copy(
+                lastInputText = text,
+                isClearButtonVisible = text.isNotBlank()
+            ).let {
+                updateState(it)
+            }
+        }
+    }
+
+    fun onActionSearch(query: String) {
+        if (query.isNotBlank()) {
+            updateKeyword(query)
+            launch {
+                state.copy(
+                    searchedBook = emptySet(),
+                    showNoResult = false,
+                ).let {
+                    updateState(it)
+                }
+            }
+            loadInitPage(query)
+            displayViewBlocker(false)
+        } else {
+            launch {
+                sendEvent(SearchEvent.ShowToast("Please Enter a search keyword"))
+            }
+        }
+    }
+
+    fun displayViewBlocker(visible: Boolean) {
+        launch {
+            state.copy(
+                isViewBlockerVisible = visible
+            ).let {
+                updateState(it)
+            }
+            if (visible.not()) {
+                sendEvent(SearchEvent.HideKeyboard)
+            }
+        }
+    }
+
     override fun onLoadMoreClicked() {
         launch {
             state.copy(

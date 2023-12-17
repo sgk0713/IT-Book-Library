@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -49,6 +51,29 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                 itemAnimator = null
             }
             Pager.initPaging(resultRecyclerView, viewModel)
+            clearButton.setOnClickListener {
+                viewModel.updateKeyword("")
+            }
+            searchEditText.doOnTextChanged { text, _, _, _ ->
+                viewModel.updateKeyword(text?.toString() ?: "")
+            }
+            searchEditText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    viewModel.displayViewBlocker(true)
+                }
+            }
+            searchEditText.setOnEditorActionListener { v, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_SEARCH -> {
+                        viewModel.onActionSearch(v.text.toString())
+                        true
+                    }
+                    else -> false
+                }
+            }
+            viewBlocker.setOnClickListener {
+                viewModel.displayViewBlocker(false)
+            }
         }
     }
 
