@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ITBookLibrary</string>
+    <string name="search_hint">Please enter a search keyword</string>
+    <string name="no_result_keyword">There are no search results for \'%1$s\'</string>
+    <string name="isbn_13_info">ISBN-13 : %1$s</string>
+    <string name="load_more">Load more</string>
 </resources>
