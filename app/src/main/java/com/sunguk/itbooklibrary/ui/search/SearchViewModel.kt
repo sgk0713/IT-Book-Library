@@ -24,6 +24,12 @@ class SearchViewModel @Inject constructor(
     override val itemsPerPage: Int = 20
     override val loadSuccessPageSet: HashSet<Int> = hashSetOf()
 
+    fun start() {
+        launch {
+            sendEvent(SearchEvent.FillTextWith(state.lastInputText))
+        }
+    }
+
     override suspend fun onNewPageRequest(page: Int): Pageable.Result<SearchBook.Response> {
         runCatching {
             val keyword = state.searchKeyword
