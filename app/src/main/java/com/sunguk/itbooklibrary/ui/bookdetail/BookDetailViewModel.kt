@@ -53,4 +53,12 @@ class BookDetailViewModel @Inject constructor(
             )
         }
     }
+
+    fun openDetailLink() {
+        launch {
+            state.book?.detailPageUrl?.let {
+                sendEvent(BookDetailEvent.OpenWebLink(it))
+            }
+        }
+    }
 }

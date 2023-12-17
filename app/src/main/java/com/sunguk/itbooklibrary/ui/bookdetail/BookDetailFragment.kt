@@ -1,5 +1,7 @@
 package com.sunguk.itbooklibrary.ui.bookdetail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +40,9 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
     override fun initUi() {
         binding.toolbar.setNavigationOnClickListener {
             viewModel.navToBack()
+        }
+        binding.openLinkButton.setOnClickListener {
+            viewModel.openDetailLink()
         }
     }
 
@@ -83,6 +88,10 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                                     event.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
+                            }
+                            is BookDetailEvent.OpenWebLink -> {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.url))
+                                startActivity(intent)
                             }
                         }
                     }
