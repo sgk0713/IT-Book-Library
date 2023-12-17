@@ -66,8 +66,19 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                     .collect { state ->
                         state.book?.run {
+                            Glide.with(binding.imageView)
+                                .load(imageUrl)
+                                .error(R.drawable.ic_launcher_foreground)
+                                .placeholder(R.drawable.ic_launcher_foreground)
+                                .into(binding.imageView)
+                            binding.publisherGroup.isVisible = publisher.isNotBlank()
+                            binding.authorGroup.isVisible = authors.isNotBlank()
+                            binding.languageGroup.isVisible = language.isNotBlank()
+                            binding.descGroup.isVisible = desc.isNotBlank()
+                            binding.subtitle.isVisible = subtitle.isNotBlank()
                             binding.pdfGroup.isVisible = pdfs.isNotEmpty()
                             pdfsAdapter.replaceItems(pdfs)
+
                             binding.title.text = title
                             binding.subtitle.text = subtitle
                             binding.authors.text = authors
@@ -80,11 +91,6 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                             binding.ratingValue.text = rating
                             binding.desc.text = desc
                             binding.price.text = price
-                            Glide.with(binding.imageView)
-                                .load(imageUrl)
-                                .error(R.drawable.ic_launcher_foreground)
-                                .placeholder(R.drawable.ic_launcher_foreground)
-                                .into(binding.imageView)
                         }
                         binding.loadingView.isVisible = state.isLoadingContent
                         binding.refreshView.isVisible = state.showRefreshButton

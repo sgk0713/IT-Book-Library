@@ -1,5 +1,6 @@
 package com.sunguk.itbooklibrary.ui.search.adapter
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -28,6 +29,7 @@ class ResultViewHolder(
                 .into(imageView)
             title.text = result.book.title
             subtitle.text = result.book.subtitle
+            subtitle.isVisible = result.book.subtitle.isNotBlank()
             price.text = result.book.price
             isbn13.text = itemView.resources.getString(R.string.isbn_13_info, result.book.isbn13)
             openLinkButton.setOnClickListener {

@@ -329,6 +329,29 @@
                     app:layout_constraintTop_toBottomOf="@id/descTitle"
                     tools:text="An application running in the cloud can benefit from incredible efficiencies, but they come with unique security threats too. A DevOps team's highest priority is understanding those risks and hardening the system against them.Securing DevOps teaches you the essential techniques to secure your c..." />
 
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/publisherGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="publisherTitle, publisher" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/authorGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="authorTitle, authors" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/languageGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="languageTitle, language" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/descGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="descTitle, desc" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -369,6 +392,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/refreshView"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#E6E6E6"
