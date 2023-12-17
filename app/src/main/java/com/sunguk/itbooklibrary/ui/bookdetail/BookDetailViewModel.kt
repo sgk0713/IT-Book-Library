@@ -2,6 +2,7 @@ package com.sunguk.itbooklibrary.ui.bookdetail
 
 import com.sunguk.domain.usecase.GetBookDetail
 import com.sunguk.itbooklibrary.ui.base.BaseViewModel
+import com.sunguk.itbooklibrary.ui.bookdetail.adapter.BookDetailController
 import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailEvent
 import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
     private val getBookDetail: GetBookDetail,
-) : BaseViewModel<BookDetailState, BookDetailEvent>(BookDetailState()) {
+) : BaseViewModel<BookDetailState, BookDetailEvent>(BookDetailState()), BookDetailController {
 
     fun start(isbn13: String) {
         if (state.isInitialized.not()) {
@@ -59,6 +60,12 @@ class BookDetailViewModel @Inject constructor(
             state.book?.detailPageUrl?.let {
                 sendEvent(BookDetailEvent.OpenWebLink(it))
             }
+        }
+    }
+
+    override fun onPdfLinkClicked(url: String) {
+        launch {
+            sendEvent(BookDetailEvent.OpenWebLink(url))
         }
     }
 }

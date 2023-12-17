@@ -14,10 +14,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.sunguk.itbooklibrary.R
 import com.sunguk.itbooklibrary.databinding.FragmentBookdetailBinding
 import com.sunguk.itbooklibrary.ui.base.BaseFragment
+import com.sunguk.itbooklibrary.ui.bookdetail.adapter.PDFsAdapter
 import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,6 +31,8 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentBookdetailBinding =
         FragmentBookdetailBinding::inflate
+
+    private val pdfsAdapter by lazy { PDFsAdapter(viewModel) }
 
 
     override fun onViewCreatedCustomized(view: View, savedInstanceState: Bundle?) {
@@ -44,6 +48,12 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
         binding.openLinkButton.setOnClickListener {
             viewModel.openDetailLink()
         }
+        binding.pdfRecyclerView.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = pdfsAdapter
+            itemAnimator = null
+        }
     }
 
     override fun initBinding() {
@@ -53,6 +63,8 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                     .collect { state ->
                         state.book?.run {
+                            binding.pdfGroup.isVisible = pdfs.isNotEmpty()
+                            pdfsAdapter.replaceItems(pdfs)
                             binding.title.text = title
                             binding.subtitle.text = subtitle
                             binding.authors.text = authors
@@ -70,7 +82,6 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                                 .error(R.drawable.ic_launcher_foreground)
                                 .placeholder(R.drawable.ic_launcher_foreground)
                                 .into(binding.imageView)
-                            binding.pdfGroup.isVisible = pdfs.isEmpty()
                         }
                     }
             }
