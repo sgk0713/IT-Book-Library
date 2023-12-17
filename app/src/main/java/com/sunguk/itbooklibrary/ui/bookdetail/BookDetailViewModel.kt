@@ -1,0 +1,97 @@
+package com.sunguk.itbooklibrary.ui.bookdetail
+
+import com.sunguk.domain.usecase.CheckNetworkAvailability
+import com.sunguk.domain.usecase.GetBookDetail
+import com.sunguk.itbooklibrary.R
+import com.sunguk.itbooklibrary.ui.base.BaseViewModel
+import com.sunguk.itbooklibrary.ui.bookdetail.adapter.BookDetailController
+import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailEvent
+import com.sunguk.itbooklibrary.ui.bookdetail.intent.BookDetailState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class BookDetailViewModel @Inject constructor(
+    private val getBookDetail: GetBookDetail,
+    private val checkNetworkAvailability: CheckNetworkAvailability,
+) : BaseViewModel<BookDetailState, BookDetailEvent>(BookDetailState()), BookDetailController {
+
+    fun start(isbn13: String) {
+        if (state.isInitialized.not()) {
+            launch {
+                state.copy(
+                    isbn13 = isbn13,
+                ).let {
+                    updateState(it)
+                }
+                loadDetail(isbn13)
+            }
+        }
+    }
+
+    private suspend fun loadDetail(isbn13: String) {
+        runCatching {
+            state.copy(
+                isLoadingContent = true
+            ).let {
+                updateState(it)
+            }
+            getBookDetail.invoke(isbn13)
+        }.onSuccess {
+            state.copy(
+                book = it,
+                isLoadingContent = false,
+            ).let {
+                updateState(it)
+            }
+        }.onFailure {
+            if (checkNetworkAvailability.invoke(Unit).not()) {
+                sendEvent(BookDetailEvent.ShowToast(R.string.network_error))
+            } else {
+                sendEvent(
+                    BookDetailEvent.ShowToast(R.string.unknown_error)
+                )
+            }
+            state.copy(
+                showRefreshButton = true,
+                isLoadingContent = false,
+            ).let {
+                updateState(it)
+            }
+        }
+    }
+
+    fun reload() {
+        launch {
+            state.copy(
+                showRefreshButton = false
+            ).let {
+                updateState(it)
+            }
+            loadDetail(state.isbn13)
+        }
+    }
+
+    fun navToBack() {
+        launch {
+            sendEvent(
+                BookDetailEvent.NavToBack
+            )
+        }
+    }
+
+    fun openDetailLink() {
+        launch {
+            state.book?.detailPageUrl?.let {
+                sendEvent(BookDetailEvent.OpenWebLink(it))
+            }
+        }
+    }
+
+    override fun onPdfLinkClicked(url: String) {
+        launch {
+            sendEvent(BookDetailEvent.OpenWebLink(url))
+        }
+    }
+}

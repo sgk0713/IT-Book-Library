@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ITBookLibrary</string>
+    <string name="search_hint">Please enter a search keyword</string>
+    <string name="no_result_keyword">There are no search results for \'%1$s\'</string>
+    <string name="isbn_13_info">ISBN-13 : %1$s</string>
+    <string name="isbn_10_info">ISBN-10 : %1$s</string>
+    <string name="load_more">Load more</string>
+    <string name="rating">Rating</string>
+    <string name="pages">Pages</string>
+    <string name="year">Year</string>
+    <string name="publisher">Publisher</string>
+    <string name="author">Author</string>
+    <string name="language">Language</string>
+    <string name="description">Description</string>
+    <string name="pdfs">PDFs</string>
+    <string name="reload">Reload</string>
+    <string name="operator_guide">Try using \'or(|)\' and \'not(-)\' operators!\n\n android|java\n\'android\' or \'java\' in the title\n\n android-java\n\'android\' but excluded \'java\' in the title</string>
+    <string name="network_error">Check Network State</string>
+    <string name="unknown_error">Unknown Error Occurred</string>
+    <string name="keyword_blank_error">Please Enter a search keyword</string>
+</resources>
