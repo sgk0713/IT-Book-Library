@@ -54,6 +54,9 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
             adapter = pdfsAdapter
             itemAnimator = null
         }
+        binding.refreshButton.setOnClickListener {
+            viewModel.reload()
+        }
     }
 
     override fun initBinding() {
@@ -84,6 +87,7 @@ class BookDetailFragment : BaseFragment<FragmentBookdetailBinding>() {
                                 .into(binding.imageView)
                         }
                         binding.loadingView.isVisible = state.isLoadingContent
+                        binding.refreshView.isVisible = state.showRefreshButton
                     }
             }
             launch {

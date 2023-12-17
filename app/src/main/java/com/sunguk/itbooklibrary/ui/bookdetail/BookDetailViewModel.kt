@@ -19,31 +19,50 @@ class BookDetailViewModel @Inject constructor(
             launch {
                 state.copy(
                     isbn13 = isbn13,
-                    isLoadingContent = true
                 ).let {
                     updateState(it)
                 }
-                runCatching {
-                    getBookDetail.invoke(isbn13)
-                }.onSuccess {
-                    state.copy(
-                        book = it,
-                        isLoadingContent = false,
-                    ).let {
-                        updateState(it)
-                    }
-                }.onFailure {
-                    sendEvent(
-                        BookDetailEvent.ShowToast("Error Occurred")
-                    )
-                    state.copy(
-                        showRefreshButton = true,
-                        isLoadingContent = false,
-                    ).let {
-                        updateState(it)
-                    }
-                }
+                loadDetail(isbn13)
             }
+        }
+    }
+
+    private suspend fun loadDetail(isbn13: String) {
+        runCatching {
+            state.copy(
+                isLoadingContent = true
+            ).let {
+                updateState(it)
+            }
+            getBookDetail.invoke(isbn13)
+        }.onSuccess {
+            state.copy(
+                book = it,
+                isLoadingContent = false,
+            ).let {
+                updateState(it)
+            }
+        }.onFailure {
+            sendEvent(
+                BookDetailEvent.ShowToast("Error Occurred")
+            )
+            state.copy(
+                showRefreshButton = true,
+                isLoadingContent = false,
+            ).let {
+                updateState(it)
+            }
+        }
+    }
+
+    fun reload() {
+        launch {
+            state.copy(
+                showRefreshButton = false
+            ).let {
+                updateState(it)
+            }
+            loadDetail(state.isbn13)
         }
     }
 
