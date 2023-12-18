@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
 
     private val loadMoreItem = SearchResultBook.LoadMore()
 
-    override val itemsPerPage: Int = 20
+    override val itemsPerPage: Int = 10
     override val loadSuccessPageSet: HashSet<Int> = hashSetOf()
 
     fun start() {
